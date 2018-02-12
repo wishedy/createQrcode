@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="../src/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="../src/jquery.qrcode.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".btn").click(function(){
+                var str ="";
+                str+="您输入的内容是:"+$("#txt").val();
+                console.log(str);
+                function toUtf8(str) {
+                 var out, i, len, c;
+                 out = "";
+                 len = str.length;
+                 for(i = 0; i < len; i++) {
+                 c = str.charCodeAt(i);
+                 if ((c >= 0x0001) && (c <= 0x007F)) {
+                 out += str.charAt(i);
+                 } else if (c > 0x07FF) {
+                 out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                 out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+                 out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+                 } else {
+                 out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+                 out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+                 }
+                 }
+                 return out;
+                 }
+                var nextstr = toUtf8(str);
+                console.log(nextstr);
+                $("#qrcode").qrcode({//"#qrcode"是二维码生成的盛放区域，可自由命名
+                    render: "canvas", //table方式
+                    width: 480, //宽度
+                    height:480, //高度
+                    text: nextstr, //任意内容，
+                    background : "#fff",       //二维码的后景色
+                    foreground : "#333",        //二维码的前景色
+                });
+            })
+
+        });
+    </script>
+    <style>
+        section{
+            width:80vw;
+            height:50rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin:2rem auto;
+        }
+        form {
+            width:30rem;
+            height:30rem;
+            border:1px solid #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding:1rem;
+            font:600 1.4rem/3rem "宋体";
+        }
+        form div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            height:9%;
+        }
+        input {
+            width:60%;
+            font:600 1.4rem/3rem "宋体";
+        }
+        #qrcode {
+            width:30rem;
+            height:30rem;
+            padding:1rem;
+            border:1px solid #333;
+        }
+    </style>
+</head>
+<body>
+<section>
+    <form action="post" id="form">
+        <div class="info01">
+            <label for="">请输入内容</label>
+            <input type="text" id="txt"/>
+        </div>
+        <div class="info10">
+            <input type="button" class="btn" value="生成二维码"/>
+        </div>
+    </form>
+    <div id="qrcode"></div>
+</section>
+
+</body>
+</html>
